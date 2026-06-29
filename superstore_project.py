@@ -15,7 +15,6 @@ data["ship_days"]=(data["ship_date"]-data["order_date"]).dt.days
 
 connection=sqlite3.connect("superstore.db")
 data.to_sql("orders", connection, if_exists="replace",index=False)
-cursor=connection.cursor()
 three_most_profitable_products="select * from( select category,product_name,sum(profit) as total_profit, RANK() over(partition by category order by sum(profit) desc) as product_rank from orders group by category,product_name) where product_rank<=3"
 running_total="select order_date,sales,sum(sales) over(order by order_date) as running_total from orders group by order_date order by order_date"
 average_sale_category="select category,round(avg(sales),2) as average_sale from orders group by category"
